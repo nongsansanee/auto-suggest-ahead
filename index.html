@@ -7,13 +7,39 @@
     <title>Auto Suggest Ahead WTF!!!</title>
 </head>
 <body>
-
+    <div class="container">
+        <div class="col-sm-12 col-lg-4">
+            <label>ค้นหาชื่อสถานที่:</label>
+            <input type="text" id="find-place" class="form-control">
+        </div>
+    </div>
 <script>
 const citiesEndpoint = "https://gist.githubusercontent.com/koramit/594b1b217cf6b5d1bf084fa27de09b8d/raw/5f73f96dbad9aac88951c1e1a2c6804df3487a9b/thai-subDistricts.json";
 const cities = [];
 fetch(citiesEndpoint)
     .then(blob => blob.json())
     .then(data => cities.push(...data));
+
+    function searchPlace(){
+        const wordFind = document.getElementById("find-place").value;
+
+        console.log(wordFind);
+
+        let resultOfFind = cities.filter(function(place){
+            //console.log(wordFind);
+                if(place.district==wordFind || place.amphoe==wordFind || place.province==wordFind){
+                     return true;
+                 }
+            
+           
+        });
+
+         console.table(resultOfFind);
+    };
+
+    document.getElementById("find-place").addEventListener("change",searchPlace);
+
+   
 </script>
 </body>
 </html>
