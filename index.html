@@ -5,18 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
     <title>Auto Suggest Ahead WTF!!!</title>
+    <style>
+        html{
+            box-sizing: border-box;
+        }
+        *,*:before,*:after{
+            box-sizing: inherit;
+        }
+        .form-container{
+            width: 400px;
+            margin: 40px auto;
+            
+        }
+        input{
+            width: 100%;
+        }
+        input.search{
+            border: 2px solid blue;
+            border-radius: 12px;
+            padding: 20px; 
+            font-size: 18px;
+            text-align: center;
+            outline: 0;
+        }
+        input.search:focus{
+            box-shadow: 1px 0px 4px 3px rgba(208,240,26,1);
+        }
+        ul.suggestions{
+            border: 2px solid;
+            border-radius: 12px;
+            padding: 0;
+            margin: 7px 0;
+            list-style: none;
+           
+        }
+        ul.suggestions:empty{
+            border:none;
+        }
+        li.suggestion{
+            border: 0px solid;
+            border-radius: 10px;
+            padding: 5px 20px;
+        }
+        li.suggestion:nth-child(even){
+            background: #FFFD86;
+        }
+        li.suggestion:nth-child(odd){
+            
+            background: #E4FAA2;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
+    <div class="form-container">
         <div class="col-sm-12 col-lg-4">
-            <label>ค้นหาชื่อจังหวัด/อำเภอ/ตำบล:</label>
-            <input type="text" id="find-place" class="form-control">
+            <!-- <label>ค้นหาชื่อจังหวัด/อำเภอ/ตำบล:</label> -->
+            <input type="text" id="find-place" class="search">
+            <ul class="suggestions"></ul>
         </div>
 
-        <div>  
-          <ul class="list-group">    
-          </ul>
-        </div>
+     
     </div>
 <script>
 const citiesEndpoint = "https://gist.githubusercontent.com/koramit/594b1b217cf6b5d1bf084fa27de09b8d/raw/5f73f96dbad9aac88951c1e1a2c6804df3487a9b/thai-subDistricts.json";
@@ -27,36 +75,48 @@ fetch(citiesEndpoint)
 
     function searchPlace(){
 
+            console.log(this.value); //this คือ ผู้ฟัง
 
+            let ul = document.querySelector("ul.suggestions");
 
-            const wordFind = document.getElementById("find-place").value;
+        //     const wordFind = document.getElementById("find-place").value;
 
-            if(wordFind.length < 2){
+            if(this.value.length < 2){
+                ul.innerHTML = "";
                 return;
             }
 
-            const ul = document.querySelector(".list-group");
-            ul.innerHTML = ""
-            // console.log(wordFind);
-
-            let resultOfFind = cities.filter(function(place){
-                //console.log(wordFind);
-                    if(place.district.indexOf(wordFind)!== -1 || place.amphoe.indexOf(wordFind)!== -1 || place.province.indexOf(wordFind)!== -1){
-                        return true;
-                    }
-        
-           
-        });
-        // console.table(resultOfFind);
        
-           resultOfFind.forEach((item,index)=>{
-                  //console.log(item.join("-"));
-                // //console.log(item);
-                 const label = document.createTextNode('ตำบล'+item.district+'>>อำเภอ'+item.amphoe+'>>จังหวัด'+item.province+'>>รหัสไปรษณีย์-'+item.zipcode+'>>รหัสCCAATT_CODE-'+item.district_code);
-                 const li = document.createElement("LI");
-                 li.appendChild(label);
-                 ul.appendChild(li);
-           });
+
+            let resultOfFind = cities.filter(place=>{
+                // console.log(this.value);
+                    if(place.district.indexOf(this.value) > -1 || 
+                      place.amphoe.indexOf(this.value)> -1 ||  
+                      place.province.indexOf(this.value)> -1 ||
+                      (place.zipcode+"").indexOf(this.value)> -1){
+                        return true;
+                    }       
+             });
+        // console.table(resultOfFind);
+
+      
+
+        let items = resultOfFind.slice(0,15).map(c=>{
+            let label = `${c.district} >>${c.amphoe} >>${c.province} >>${c.zipcode}`;
+            return `<li class="suggestion">${label}</li>`;
+        });
+        ul.innerHTML=items.join("");
+        console.table(items);
+
+        //--OLD version
+        //    resultOfFind.forEach((item,index)=>{
+        //           //console.log(item.join("-"));
+        //         // //console.log(item);
+        //          const label = document.createTextNode('ตำบล'+item.district+'>>อำเภอ'+item.amphoe+'>>จังหวัด'+item.province+'>>รหัสไปรษณีย์-'+item.zipcode+'>>รหัสCCAATT_CODE-'+item.district_code);
+        //          const li = document.createElement("LI");
+        //          li.appendChild(label);
+        //          ul.appendChild(li);
+        //    });
         //    $data = resultOfFind.map((item) => {
         //         return item.district + ' ' + item.amphoe + ' ' + item.province + ' ' + item.zipcode
         //    });
@@ -67,7 +127,10 @@ fetch(citiesEndpoint)
 
  
 
-    document.getElementById("find-place").addEventListener("input",searchPlace);
+    // document.getElementById("find-place").addEventListener("input",searchPlace);  ex.1
+
+    const inputSearch = document.querySelector("#find-place");
+    inputSearch.addEventListener("input",searchPlace);
 
    
 </script>
