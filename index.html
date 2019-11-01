@@ -12,6 +12,11 @@
             <label>ค้นหาชื่อสถานที่:</label>
             <input type="text" id="find-place" class="form-control">
         </div>
+
+        <div>  
+          <ul class="list-group">    
+          </ul>
+        </div>
     </div>
 <script>
 const citiesEndpoint = "https://gist.githubusercontent.com/koramit/594b1b217cf6b5d1bf084fa27de09b8d/raw/5f73f96dbad9aac88951c1e1a2c6804df3487a9b/thai-subDistricts.json";
@@ -22,7 +27,8 @@ fetch(citiesEndpoint)
 
     function searchPlace(){
         const wordFind = document.getElementById("find-place").value;
-
+        const ul = document.querySelector(".list-group");
+        ul.innerHTML = ""
         console.log(wordFind);
 
         let resultOfFind = cities.filter(function(place){
@@ -33,11 +39,28 @@ fetch(citiesEndpoint)
             
            
         });
+        console.table(resultOfFind);
+       
+           resultOfFind.forEach((item,index)=>{
+                 console.log(item);
+                 const label = document.createTextNode('ตำบล'+item.district+'>>อำเภอ'+item.amphoe+'>>จังหวัด'+item.province+'>>รหัสไปรษณีย์-'+item.zipcode+'>>รหัสCCAATT_CODE-'+item.district_code);
+                 const li = document.createElement("LI");
+                 li.appendChild(label);
+                //  li.appendChild(item);
+                 li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
+                  ul.appendChild(li);
+           });
 
-         console.table(resultOfFind);
+            // li.appendChild(resultOfFind);
+            // li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
+            // ul.appendChild(li);
+
+        
     };
 
-    document.getElementById("find-place").addEventListener("change",searchPlace);
+ 
+
+    document.getElementById("find-place").addEventListener("input",searchPlace);
 
    
 </script>
