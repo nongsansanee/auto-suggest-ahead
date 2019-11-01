@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <div class="col-sm-12 col-lg-4">
-            <label>ค้นหาชื่อสถานที่:</label>
+            <label>ค้นหาชื่อจังหวัด/อำเภอ/ตำบล:</label>
             <input type="text" id="find-place" class="form-control">
         </div>
 
@@ -26,29 +26,41 @@ fetch(citiesEndpoint)
     .then(data => cities.push(...data));
 
     function searchPlace(){
-        const wordFind = document.getElementById("find-place").value;
-        const ul = document.querySelector(".list-group");
-        ul.innerHTML = ""
-        // console.log(wordFind);
 
-        let resultOfFind = cities.filter(function(place){
-            //console.log(wordFind);
-                if(place.district.indexOf(wordFind)!== -1 || place.amphoe.indexOf(wordFind)!== -1 || place.province.indexOf(wordFind)!== -1){
-                     return true;
-                 }
+
+
+            const wordFind = document.getElementById("find-place").value;
+
+            if(wordFind.length < 2){
+                return;
+            }
+
+            const ul = document.querySelector(".list-group");
+            ul.innerHTML = ""
+            // console.log(wordFind);
+
+            let resultOfFind = cities.filter(function(place){
+                //console.log(wordFind);
+                    if(place.district.indexOf(wordFind)!== -1 || place.amphoe.indexOf(wordFind)!== -1 || place.province.indexOf(wordFind)!== -1){
+                        return true;
+                    }
         
            
         });
         // console.table(resultOfFind);
        
            resultOfFind.forEach((item,index)=>{
-                //  console.log(item);
+                  //console.log(item.join("-"));
+                // //console.log(item);
                  const label = document.createTextNode('ตำบล'+item.district+'>>อำเภอ'+item.amphoe+'>>จังหวัด'+item.province+'>>รหัสไปรษณีย์-'+item.zipcode+'>>รหัสCCAATT_CODE-'+item.district_code);
                  const li = document.createElement("LI");
                  li.appendChild(label);
                  ul.appendChild(li);
            });
-
+        //    $data = resultOfFind.map((item) => {
+        //         return item.district + ' ' + item.amphoe + ' ' + item.province + ' ' + item.zipcode
+        //    });
+        //    console.log($data);
          
         
     };
