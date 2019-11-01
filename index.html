@@ -29,20 +29,20 @@ fetch(citiesEndpoint)
         const wordFind = document.getElementById("find-place").value;
         const ul = document.querySelector(".list-group");
         ul.innerHTML = ""
-        console.log(wordFind);
+        // console.log(wordFind);
 
         let resultOfFind = cities.filter(function(place){
             //console.log(wordFind);
-                if(place.district==wordFind || place.amphoe==wordFind || place.province==wordFind){
+                if(place.district.indexOf(wordFind)!== -1 || place.amphoe.indexOf(wordFind)!== -1 || place.province.indexOf(wordFind)!== -1){
                      return true;
                  }
-            
+        
            
         });
-        console.table(resultOfFind);
+        // console.table(resultOfFind);
        
            resultOfFind.forEach((item,index)=>{
-                 console.log(item);
+                //  console.log(item);
                  const label = document.createTextNode('ตำบล'+item.district+'>>อำเภอ'+item.amphoe+'>>จังหวัด'+item.province+'>>รหัสไปรษณีย์-'+item.zipcode+'>>รหัสCCAATT_CODE-'+item.district_code);
                  const li = document.createElement("LI");
                  li.appendChild(label);
