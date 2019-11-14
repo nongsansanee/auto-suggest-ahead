@@ -37,16 +37,29 @@
             padding: 0;
             margin: 7px 0;
             list-style: none;
+            max-height: 300px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            position: absolute;
+            width: 100%;
+            transition: 1s max-height ease-in-out;
            
         }
         ul.suggestions:empty{
             border:none;
+            max-height: 0;
+           
+           
         }
         li.suggestion{
             border: 0px solid;
             border-radius: 10px;
             padding: 5px 20px;
+            cursor: pointer;
+            transition: 0.5s all ease;
+           
         }
+    
         li.suggestion:nth-child(even){
             background: #FFFD86;
         }
@@ -54,14 +67,26 @@
             
             background: #E4FAA2;
         }
+        li.suggestion:hover{
+            background: #fcfcfc;
+            transform: scale(1.1);
+        }
+
+        .hl{
+            color:greenyellow;
+            background: blue;
+        }
     </style>
 </head>
 <body>
     <div class="form-container">
-        <div class="col-sm-12 col-lg-4">
+        <div style="position: relative;" class="col-sm-12 col-lg-4">
             <!-- <label>ค้นหาชื่อจังหวัด/อำเภอ/ตำบล:</label> -->
-            <input type="text" id="find-place" class="search">
+            <input type="text" id="find-place" class="search" autocomplete="false">
             <ul class="suggestions"></ul>
+        </div>
+        <div id="result">
+            Search Result
         </div>
 
      
@@ -73,16 +98,22 @@ fetch(citiesEndpoint)
     .then(blob => blob.json())
     .then(data => cities.push(...data));
 
+const ul = document.querySelector("ul.suggestions");
+const result = document.getElementById("result");
+
+let selectedItemCode = 0;
+
     function searchPlace(){
 
             console.log(this.value); //this คือ ผู้ฟัง
 
-            let ul = document.querySelector("ul.suggestions");
+            
 
         //     const wordFind = document.getElementById("find-place").value;
-
-            if(this.value.length < 2){
+        
+            if(this.value.length < 3){
                 ul.innerHTML = "";
+                result.innerText="Search Result";
                 return;
             }
 
@@ -103,7 +134,12 @@ fetch(citiesEndpoint)
 
         let items = resultOfFind.slice(0,15).map(c=>{
             let label = `${c.district} >>${c.amphoe} >>${c.province} >>${c.zipcode}`;
-            return `<li class="suggestion">${label}</li>`;
+            let formatedLabel = label.replace(this.value,`<span class="hl">${this.value}</span>`);
+            return `
+                <li class="suggestion" onclick="select(event)" data-code="${c.district_code}">
+                    ${formatedLabel}
+                </li>
+            `;
         });
         ul.innerHTML=items.join("");
         console.table(items);
@@ -125,7 +161,18 @@ fetch(citiesEndpoint)
         
     };
 
- 
+ function select(event){
+    // console.log(event.target.textContent);
+   // console.log(event.target.innerText);
+    console.log(event.target);
+
+    result.innerText=event.target.innerText;
+    selectedItemCode=event.target.dataset.code;
+    console.log(selectedItemCode);
+    ul.innerHTML = "";
+
+
+ }
 
     // document.getElementById("find-place").addEventListener("input",searchPlace);  ex.1
 
