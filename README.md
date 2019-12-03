@@ -18,10 +18,10 @@ https://earthchie.github.io/jquery.Thailand.js/
 
 # Note หลังเรียน 
 ## วิธีการดึงข้อมูลจาก JSON มา สร้างเป็น excel
- * 1. let keys=Object.keys(cities[0])
- * 2. keys;
- * 3. keys.map(k=> cities[3][k]);
- * 4. keys.join();
- * 5. cities.reduce((sum,c)=>{
+ * let keys=Object.keys(cities[0])
+ * keys;
+ * keys.map(k=> cities[3][k]);
+ * keys.join();
+ * cities.reduce((sum,c)=>{
 	  return sum + keys.map(k=> c[k]+"\n")
    }, keys.join() +"\n");
