@@ -22,6 +22,8 @@ https://earthchie.github.io/jquery.Thailand.js/
  * keys;
  * keys.map(k=> cities[3][k]);
  * keys.join();
- * cities.reduce((sum,c)=>{
-	  return sum + keys.map(k=> c[k]+"\n")
-   }, keys.join() +"\n");
+  ```javascript
+   cities.reduce((sum,c) => {
+   	 return sum+keys.map(k=>c[k])+"\n"
+    },keys.join() + "\n");
+```
